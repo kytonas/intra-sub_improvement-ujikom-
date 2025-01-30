@@ -2,12 +2,13 @@
     <div class="flex justify-between items-center mb-4 mt-4">
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
             Kanban Board - {{ $project->name ?? '' }}
-            <span class="ml-4 px-2 py-1 text-white rounded text-sm" style="background-color: {{ $project->status->color }}">
+            <span class="ml-4 px-2 py-1 text-white rounded text-sm"
+                style="background-color: {{ $project->status->color }}">
                 {{ $project->status->name ?? 'No Status' }}
             </span>
             <button wire:click="openStatusModal"
                 class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                Edit Status
+                <i class='bx bxs-edit-alt' title="Edit Status"></i>
             </button>
         </h2>
         <a href="{{ route('board.index') }}" class="text-blue-600 text-sm">
@@ -23,9 +24,11 @@
                 <div class="p-4">
                     <select wire:model="projectStatus"
                         class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="">Select Status</option>
+                        <option value="" disabled>--Pilih Status--</option>
                         @foreach ($availableStatuses as $status)
-                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                            <option value="{{ $status->id }}" {{ $projectStatus == $status->id ? 'selected' : '' }}>
+                                {{ $status->name }}
+                            </option>
                         @endforeach
                     </select>
 
@@ -33,11 +36,11 @@
                 <div class="flex justify-end p-4 border-t">
                     <button wire:click="closeStatusModal"
                         class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-2">
-                        Cancel
+                        Batal
                     </button>
                     <button wire:click="updateStatus"
                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                        Save
+                        Ubah
                     </button>
                 </div>
             </div>
@@ -188,7 +191,7 @@
 
                             <!-- Info Tipe -->
                             <div class="flex items-center space-x-1 text-sm text-gray-700">
-                                <i class="bx bx-purchase-tag text-lg" style="color: {{ $task->type->color }}"></i>
+                                <i class="bx bxs-purchase-tag text-lg" style="color: {{ $task->type->color }}"></i>
                                 <span>{{ $task->type->name }}</span>
                             </div>
 
@@ -208,7 +211,8 @@
                                 </div>
 
                                 <!-- Tombol Show -->
-                                <button onclick="" class="flex items-center" title="Show">
+                                <button onclick="" class="flex items-center" title="Show"
+                                    wire:click="openTaskModal({{ $task->id }})">
                                     <i class='bx bx-show text-xl' style="color: {{ $status->color }}"></i>
                                 </button>
 
@@ -253,6 +257,66 @@
             </div>
         @endforeach
     </div>
+
+    @if ($showTaskModal && $selectedTask)
+        <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+                <h2 class="text-xl font-bold flex items-center">
+                    {{ $selectedTask->name }}
+                    <span class="ml-2 px-2 py-0.5 text-white rounded text-sm"
+                        style="background-color: {{ $selectedTask->status->color }};">
+                        {{ $selectedTask->status->name ?? 'No Status' }}
+                    </span>
+                </h2>
+
+
+
+                <p class="text-gray-700 mt-2"><strong>Deskripsi:</strong></p>
+                <p class="text-gray-700 mt-2">{{ $selectedTask->content }}</p>
+
+                <div class="mt-4">
+                    <p><strong>Dibuat oleh:</strong> {{ $selectedTask->owner->name }}</p>
+                    <p><strong>Responsible:</strong> {{ $selectedTask->responsible->name }}</p>
+                    <p><strong>Priority:</strong> {{ $selectedTask->priority->name }}</p>
+                    <p><strong>Start Date:</strong> {{ $selectedTask->start_date }}</p>
+                    <p><strong>End Date:</strong> {{ $selectedTask->end_date }}</p>
+
+                    @if (
+                        $selectedTask->end_date &&
+                            Carbon\Carbon::now()->diffInDays(Carbon\Carbon::parse($selectedTask->end_date), false) <= 1 &&
+                            Carbon\Carbon::now()->lt(Carbon\Carbon::parse($selectedTask->end_date)))
+                        <div role="alert" class="alert bg-yellow-300 text-black mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current"
+                                fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            @php
+                                \Carbon\Carbon::setLocale('id'); // Mengubah bahasa menjadi Indonesia
+                            @endphp
+                            <span>Warning : Task ini akan mencapai deadline dalam
+                                {{ Carbon\Carbon::parse($selectedTask->end_date)->diffForHumans() }}</span>
+                        </div>
+                    @endif
+
+                    @if ($selectedTask->end_date && Carbon\Carbon::now()->gt(Carbon\Carbon::parse($selectedTask->end_date)))
+                        <div role="alert" class="alert bg-red-400 text-black mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current"
+                                fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>Warning : Task ini sudah mencapai deadline</span>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="flex justify-end mt-4">
+                    <button wire:click="closeTaskModal" class="px-4 py-2 bg-red-500 text-white rounded">Tutup</button>
+                </div>
+            </div>
+        </div>
+    @endif
 
 
     @if ($editingTaskId)

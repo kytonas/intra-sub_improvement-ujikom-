@@ -24,6 +24,8 @@ class KanbanIndex extends Component
     public $responsibles;
     public $priorities;
     public $types;
+    public $showTaskModal = false;
+    public $selectedTask  = null;
 
     // filter properties
     public $selectedType        = '';
@@ -216,7 +218,7 @@ class KanbanIndex extends Component
     public function updateStatus()
     {
         if (! $this->projectStatus) {
-            session()->flash('error', 'Please select a valid status.');
+            session()->flash('error', 'Silakan pilih status yang valid.');
             return;
         }
 
@@ -230,22 +232,39 @@ class KanbanIndex extends Component
 
             $this->refreshProjectData();
 
-
-            session()->flash('message', "Project status updated successfully to {$project->status->name}.");
+            session()->flash('message', "Status proyek berhasil diperbarui ke {$project->status->name}.");
         } else {
-            session()->flash('error', 'Project not found.');
+            session()->flash('error', 'Proyek tidak ditemukan.');
         }
     }
 
     public function openStatusModal()
     {
         $this->availableStatuses = Statuses::all();
+        $this->projectStatus     = $this->project ? $this->project->status_id : null;
         $this->showStatusModal   = true;
     }
 
     public function closeStatusModal()
     {
         $this->showStatusModal = false;
+    }
+
+    public function openTaskModal($taskId)
+    {
+        $this->selectedTask = Tasks::find($taskId);
+        if ($this->selectedTask) {
+            $this->selectedTask->start_date = Carbon::parse($this->selectedTask->start_date)->format('d M Y');
+            $this->selectedTask->end_date   = Carbon::parse($this->selectedTask->end_date)->format('d M Y');
+        }
+
+        $this->showTaskModal = true;
+    }
+
+    public function closeTaskModal()
+    {
+        $this->showTaskModal = false;
+        $this->selectedTask  = null;
     }
 
     public function mount($projectId)
