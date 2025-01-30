@@ -260,7 +260,16 @@
 
     @if ($showTaskModal && $selectedTask)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative">
+                <!-- Tombol Close -->
+                <button wire:click="closeTaskModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
                 <h2 class="text-xl font-bold flex items-center">
                     {{ $selectedTask->name }}
                     <span class="ml-2 px-2 py-0.5 text-white rounded text-sm"
@@ -268,8 +277,6 @@
                         {{ $selectedTask->status->name ?? 'No Status' }}
                     </span>
                 </h2>
-
-
 
                 <p class="text-gray-700 mt-2"><strong>Deskripsi:</strong></p>
                 <p class="text-gray-700 mt-2">{{ $selectedTask->content }}</p>
@@ -286,14 +293,12 @@
                             Carbon\Carbon::now()->diffInDays(Carbon\Carbon::parse($selectedTask->end_date), false) <= 1 &&
                             Carbon\Carbon::now()->lt(Carbon\Carbon::parse($selectedTask->end_date)))
                         <div role="alert" class="alert bg-yellow-300 text-black mt-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current"
-                                fill="none" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 shrink-0 stroke-current inline-block" fill="none"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
-                            @php
-                                \Carbon\Carbon::setLocale('id'); // Mengubah bahasa menjadi Indonesia
-                            @endphp
                             <span>Warning : Task ini akan mencapai deadline dalam
                                 {{ Carbon\Carbon::parse($selectedTask->end_date)->diffForHumans() }}</span>
                         </div>
@@ -301,8 +306,9 @@
 
                     @if ($selectedTask->end_date && Carbon\Carbon::now()->gt(Carbon\Carbon::parse($selectedTask->end_date)))
                         <div role="alert" class="alert bg-red-400 text-black mt-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current"
-                                fill="none" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 shrink-0 stroke-current inline-block" fill="none"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
@@ -310,13 +316,10 @@
                         </div>
                     @endif
                 </div>
-
-                <div class="flex justify-end mt-4">
-                    <button wire:click="closeTaskModal" class="px-4 py-2 bg-red-500 text-white rounded">Tutup</button>
-                </div>
             </div>
         </div>
     @endif
+
 
 
     @if ($editingTaskId)
