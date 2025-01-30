@@ -71,7 +71,7 @@
                                     class="p-2 rounded-md
                                         @if ($date['isToday']) bg-blue-500 text-white font-bold
                                         @elseif ($date['isCurrentMonth']) bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200
-                                        @else bg-gray-200 dark:bg-gray-600 text-gray-400 @endif">
+                                        @else bg-gray-200 dark:bg-gray-600 text-gray-400 @endif"  title="{{ $date['fullDate'] }}">
                                     {{ $date['day'] }}
                                 </div>
                             @endforeach

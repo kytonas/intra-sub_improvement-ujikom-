@@ -70,6 +70,7 @@ class Welcome extends Component
                     'day' => $date->day,
                     'isToday' => $date->isToday(),
                     'isCurrentMonth' => $date->month === $this->currentMonth,
+                    'fullDate' => $date->locale('id')->isoFormat('dddd, D MMMM YYYY'),
                 ];
             })->toArray();
         })->toArray();
