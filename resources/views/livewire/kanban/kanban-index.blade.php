@@ -279,7 +279,7 @@
                 </h2>
 
                 <p class="text-gray-700 mt-2"><strong>Deskripsi:</strong></p>
-                <p class="text-gray-700 mt-2">{{ $selectedTask->content }}</p>
+                <p class="text-gray-700 mt-2">{!! $selectedTask->content !!}</p>
 
                 <div class="mt-4">
                     <p><strong>Dibuat oleh:</strong> {{ $selectedTask->owner->name }}</p>
