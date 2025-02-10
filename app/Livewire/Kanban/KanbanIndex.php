@@ -20,10 +20,10 @@ class KanbanIndex extends Component
     public $newTask       = [];
     public $project;
     public $projectId;
-    public $owners;
-    public $responsibles;
-    public $priorities;
-    public $types;
+    public $owners        = [];
+    public $responsibles  = [];
+    public $priorities    = [];
+    public $types         = [];
     public $showTaskModal = false;
     public $selectedTask  = null;
 
@@ -36,7 +36,28 @@ class KanbanIndex extends Component
     public $availableStatuses = [];
 
     public $projectStatus;
-    public $listeners = ['refreshProject' => 'refreshProjectData'];
+   protected $listeners = [
+    'refreshProject'    => 'refreshProjectData',
+    'updateTaskContent',
+    'initEditor',
+];
+
+
+   public function updateTaskContent($content)
+{
+    if (!is_array($this->newTask)) {
+        $this->newTask = [];
+    }
+
+    $this->newTask['content'] = $content;
+
+    if (! is_array($this->editedTask)) {
+    $this->editedTask = [];
+}
+
+$this->editedTask['content'] = $content;
+
+}
 
     public function filter()
     {
@@ -136,6 +157,8 @@ class KanbanIndex extends Component
         } else {
             session()->flash('error', 'Default status not found!');
         }
+
+        $this->dispatch('initEditor');
     }
 
     public function resetCreateTask()
@@ -145,46 +168,53 @@ class KanbanIndex extends Component
     }
 
     public function saveNewTask()
-    {
-        if (! Auth::user()->can('manageTasks-create')) {
-            session()->flash('error', 'Anda tidak memiliki izin untuk membuat tugas.');
+{
+    if (! Auth::user()->can('manageTasks-create')) {
+        session()->flash('error', 'Anda tidak memiliki izin untuk membuat tugas.');
+        return;
+    }
+
+    $this->validate([
+        'newTask.name'       => 'required|string|max:255',
+        'newTask.start_date' => 'nullable|date',
+        'newTask.end_date'   => 'nullable|date|after_or_equal:newTask.start_date',
+    ]);
+
+    // Pastikan newTask adalah array
+    if (!is_array($this->newTask)) {
+        $this->newTask = [];
+    }
+
+    // Pastikan tanggal start_date dan end_date adalah objek Carbon jika ada
+    if (!empty($this->newTask['start_date'])) {
+        $this->newTask['start_date'] = Carbon::parse($this->newTask['start_date']);
+    }
+
+    if (!empty($this->newTask['end_date'])) {
+        $this->newTask['end_date'] = Carbon::parse($this->newTask['end_date']);
+    }
+
+    // Ambil status default jika belum diatur
+    if (empty($this->newTask['status_id'])) {
+        $defaultStatus = TaskStatus::where('is_default', true)->first();
+        if ($defaultStatus) {
+            $this->newTask['status_id'] = $defaultStatus->id;
+        } else {
+            session()->flash('error', 'Default status not found!');
             return;
         }
-        $this->validate([
-            'newTask.name'       => 'required|string|max:255',
-            'newTask.start_date' => 'nullable|date',
-            'newTask.end_date'   => 'nullable|date|after_or_equal:newTask.start_date',
-        ]);
-
-        // Pastikan tanggal start_date dan end_date adalah objek Carbon jika ada
-        if (isset($this->newTask['start_date'])) {
-            $this->newTask['start_date'] = Carbon::parse($this->newTask['start_date']);
-        }
-
-        if (isset($this->newTask['end_date'])) {
-            $this->newTask['end_date'] = Carbon::parse($this->newTask['end_date']);
-        }
-
-        // Ensure name is not empty
-        if (! empty($this->newTask['name'])) {
-            // Fetch the default "To Do" status if not already set
-            if (empty($this->newTask['status_id'])) {
-                $defaultStatus = TaskStatus::where('is_default', true)->first();
-                if ($defaultStatus) {
-                    $this->newTask['status_id'] = $defaultStatus->id;
-                } else {
-                    session()->flash('error', 'Default status not found!');
-                    return;
-                }
-            }
-
-            // Create the new task and associate it with the project
-            Tasks::create(array_merge($this->newTask, ['project_id' => $this->projectId]));
-        }
-
-        // Reset modal after saving the task
-        $this->resetCreateTask();
     }
+
+    // Pastikan `newTask` tidak ada nilai null sebelum disimpan
+    $cleanedTask = array_filter($this->newTask, fn($value) => !is_null($value));
+
+    // Simpan task baru
+    Tasks::create(array_merge($cleanedTask, ['project_id' => $this->projectId]));
+
+    // Reset modal setelah menyimpan
+    $this->resetCreateTask();
+}
+
 
     public function updateTaskRealTime()
     {
@@ -271,13 +301,13 @@ class KanbanIndex extends Component
     {
         $this->projectId     = $projectId;
         $this->project       = Project::find($projectId);
-        $this->owners        = User::all();
-        $this->responsibles  = User::all();
-        $this->priorities    = Priorities::all();
-        $this->types         = TaskType::all();
+        $this->owners        = User::all() ?? collect();
+        $this->responsibles  = User::all() ?? collect();
+        $this->priorities    = Priorities::all() ?? collect();
+        $this->types         = TaskType::all() ?? collect();
         $this->currentStatus = $this->project && $this->project->status ? $this->project->status->name : null;
 
-        $this->availableStatuses = Statuses::all();
+        $this->availableStatuses = Statuses::all() ?? collect();
 
     }
 

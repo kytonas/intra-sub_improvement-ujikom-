@@ -43,7 +43,7 @@
 
             <!-- Kalender Card tetap di sebelah jam digital -->
             <div class="w-1/2">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+                {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
                     <!-- Navigasi Kalender -->
                     <div class="flex items-center justify-between mb-4">
                         <button wire:click="changeMonth(-1)" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md">
@@ -78,7 +78,8 @@
                         @endforeach
                     </div>
                 </div>
-            </div>
+            </div> --}}
+            @livewire('google-calendar')
         </div>
 
         <!-- Cards -->

@@ -462,10 +462,11 @@
                     <h3 class="text-xl font-semibold">Create Task</h3>
 
                     <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @foreach ([['label' => 'Task Name', 'model' => 'newTask.name', 'type' => 'text'], ['label' => 'Content', 'model' => 'newTask.content', 'type' => 'textarea'], ['label' => 'Owner', 'model' => 'newTask.owner_id', 'type' => 'select', 'options' => $owners], ['label' => 'Start Date', 'model' => 'newTask.start_date', 'type' => 'date'], ['label' => 'End Date', 'model' => 'newTask.end_date', 'type' => 'date'], ['label' => 'Responsible', 'model' => 'newTask.responsible_id', 'type' => 'select', 'options' => $responsibles], ['label' => 'Type', 'model' => 'newTask.type_id', 'type' => 'select', 'options' => $types], ['label' => 'Priority', 'model' => 'newTask.priority_id', 'type' => 'select', 'options' => $priorities], ['label' => 'Code', 'model' => 'newTask.code', 'type' => 'text'], ['label' => 'Order', 'model' => 'newTask.order', 'type' => 'number'], ['label' => 'Estimation', 'model' => 'newTask.estimation', 'type' => 'number']] as $field)
+                        @foreach ([['label' => 'Task Name', 'model' => 'newTask.name', 'type' => 'text'], ['label' => 'Owner', 'model' => 'newTask.owner_id', 'type' => 'select', 'options' => $owners], ['label' => 'Start Date', 'model' => 'newTask.start_date', 'type' => 'date'], ['label' => 'End Date', 'model' => 'newTask.end_date', 'type' => 'date'], ['label' => 'Responsible', 'model' => 'newTask.responsible_id', 'type' => 'select', 'options' => $responsibles], ['label' => 'Type', 'model' => 'newTask.type_id', 'type' => 'select', 'options' => $types], ['label' => 'Priority', 'model' => 'newTask.priority_id', 'type' => 'select', 'options' => $priorities], ['label' => 'Code', 'model' => 'newTask.code', 'type' => 'text'], ['label' => 'Order', 'model' => 'newTask.order', 'type' => 'number'], ['label' => 'Estimation', 'model' => 'newTask.estimation', 'type' => 'number']] as $field)
                             <div class="col-span-1">
                                 <label for="{{ $field['model'] }}"
                                     class="block text-sm font-medium text-gray-700">{{ $field['label'] }}</label>
+
                                 @if ($field['type'] == 'select')
                                     <select id="{{ $field['model'] }}" wire:model="{{ $field['model'] }}"
                                         class="bg-gray-100 p-2 rounded w-full">
@@ -474,9 +475,6 @@
                                             <option value="{{ $option->id }}">{{ $option->name }}</option>
                                         @endforeach
                                     </select>
-                                @elseif($field['type'] == 'textarea')
-                                    <textarea id="{{ $field['model'] }}" wire:model="{{ $field['model'] }}" placeholder="Enter {{ $field['label'] }}"
-                                        class="bg-gray-100 p-2 rounded w-full"></textarea>
                                 @else
                                     <input id="{{ $field['model'] }}" type="{{ $field['type'] }}"
                                         wire:model="{{ $field['model'] }}" placeholder="Enter {{ $field['label'] }}"
@@ -484,6 +482,14 @@
                                 @endif
                             </div>
                         @endforeach
+
+                        {{-- Content CKEditor (Ditempatkan di bawah form) --}}
+                        <div class="col-span-2">
+                            <label for="editor" class="block text-sm font-medium text-gray-700">Content</label>
+                            <div wire:ignore>
+                                <textarea id="editor" wire:model.defer="newTask.content" class="bg-gray-100 p-2 rounded w-full"></textarea>
+                            </div>
+                        </div>
 
                         <div class="col-span-2 text-right mt-4">
                             <button wire:click="saveNewTask"
@@ -496,6 +502,59 @@
             </div>
         @endif
     @endcan
+
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let editorInstance;
+
+                function initCKEditor() {
+                    if (editorInstance) {
+                        editorInstance.destroy().then(() => {
+                            createEditor();
+                        });
+                    } else {
+                        createEditor();
+                    }
+                }
+
+                function createEditor() {
+                    ClassicEditor
+                        .create(document.getElementById('editor'))
+                        .then(editor => {
+                            editorInstance = editor;
+
+                            // Update Livewire ketika isi CKEditor berubah
+                            editor.model.document.on('change:data', () => {
+                                Livewire.dispatch('updateTaskContent', editor.getData());
+                            });
+
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+
+
+                Livewire.hook('message.processed', (message, component) => {
+                    setTimeout(() => {
+                        if (document.getElementById('editor')) {
+                            initCKEditor();
+                        }
+                    }, 300);
+                });
+
+                Livewire.on('initEditor', () => {
+                    setTimeout(() => {
+                        if (document.getElementById('editor')) {
+                            initCKEditor();
+                        }
+                    }, 300);
+                });
+            });
+        </script>
+    @endpush
+
 
 
 

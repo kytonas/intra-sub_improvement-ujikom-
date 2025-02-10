@@ -2,6 +2,10 @@
 <?php
 
 use App\Livewire\Welcome;
+use App\Services\GoogleCalendarService;
+use Illuminate\Http\Request;
+
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +18,20 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
  */
+
+Route::get('/auth/google', function (GoogleCalendarService $googleService) {
+    return redirect($googleService->getAuthUrl());
+});
+
+Route::get('/auth/google/callback', function (Request $request, GoogleCalendarService $googleService) {
+    $client = new Google_Client();
+    $client->authenticate($request->get('code'));
+    $token = $client->getAccessToken();
+
+    Session::put('google_calendar_token', $token);
+
+    return redirect('/');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/', Welcome::class)->name('welcome');
