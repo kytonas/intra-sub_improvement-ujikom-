@@ -35,6 +35,8 @@
             <!-- Nama Proyek -->
             <p class="mt-2"><strong>Project : </strong> <span id="modal-project"></span></p>
 
+            <!-- Responsible User -->
+            <p class="mt-2"><strong>Responsible : </strong> <span id="modal-responsible"></span></p>
 
             <!-- Tanggal Deadline -->
             <p class="mt-2"><strong>Deadline : </strong> <span id="modal-deadline"></span></p>
@@ -95,6 +97,9 @@
                         .status || 'Tanpa Status';
                     document.getElementById('modal-project').innerText = info.event.extendedProps
                         .project || 'Tanpa Proyek';
+                    document.getElementById('modal-responsible').innerText = info.event.extendedProps
+                        .responsible || 'Tidak Diketahui';
+
 
                     // Reset semua peringatan dulu
                     document.getElementById('modal-warning-deadline').classList.add('hidden');
@@ -146,7 +151,7 @@
                     info.el.style.borderRadius = '4px'; // Agar lebih rapi
                     info.el.style.overflow = 'hidden'; // Supaya teks tidak keluar batas
                     info.el.style.textOverflow =
-                    'ellipsis'; // Jika teks terlalu panjang, tampilkan "..."
+                        'ellipsis'; // Jika teks terlalu panjang, tampilkan "..."
                     info.el.style.whiteSpace = 'nowrap'; // Supaya tetap dalam satu baris
                     info.el.style.display = 'flex'; // Supaya teks bisa sejajar dengan padding yang baik
                     info.el.style.alignItems = 'center'; // Teks berada di tengah secara vertikal

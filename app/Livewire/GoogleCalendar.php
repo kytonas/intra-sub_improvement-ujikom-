@@ -3,6 +3,7 @@ namespace App\Livewire;
 
 use App\Models\Tasks;
 use App\Services\GoogleCalendarService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
@@ -27,16 +28,29 @@ class GoogleCalendar extends Component
             $googleEvents = [];
         }
 
+        $user = Auth::user();
+
+        $taskQuery = Tasks::whereNotNull('end_date')
+            ->with(['project', 'status'])
+            ->whereHas('status', function ($query) {
+                $query->where('name', '!=', 'Archived'); // Cek status selain "Archived"
+            });
+
+        if (! $user->hasRole('superadmin')) {
+            $taskQuery->where('responsible_id', $user->id);
+        }
+
         // Ambil task dari database
-        $taskEvents = Tasks::whereNotNull('end_date')->with(['project', 'status'])->get()->map(function ($task) {
+        $taskEvents = $taskQuery->get()->map(function ($task) {
             return [
-                'title'       => $task->name, // Tambahkan status
+                'title'       => $task->name,
                 'start'       => $task->end_date,
                 'end'         => $task->end_date,
                 'description' => $task->content,
                 'id'          => $task->id,
                 'project'     => $task->project->name ?? 'Tanpa Proyek',
-                'status'      => $task->status->name ?? 'Tanpa Status', // Tambahkan status
+                'status'      => $task->status->name ?? 'Tanpa Status',
+                'responsible' => $task->responsible->name,
             ];
         })->toArray();
 

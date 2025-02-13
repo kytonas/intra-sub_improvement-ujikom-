@@ -347,13 +347,6 @@
                             wire:keyup="updateTaskRealTime" />
                     </div>
 
-                    <!-- Content -->
-                    <div class="col-span-1">
-                        <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
-                        <textarea id="content" wire:model="editedTask.content" placeholder="Enter task content"
-                            class="bg-gray-100 p-2 rounded w-full" wire:keyup="updateTaskRealTime"></textarea>
-                    </div>
-
                     <!-- Owner -->
                     <div class="col-span-1">
                         <label for="owner_id" class="block text-sm font-medium text-gray-700">Owner</label>
@@ -439,6 +432,16 @@
                             wire:keyup="updateTaskRealTime" />
                     </div>
 
+                    <!-- Content -->
+                    <div class="col-span-2">
+                        <label for="editorEdit" class="block text-sm font-medium text-gray-700">Content</label>
+                        <div wire:ignore>
+                            <textarea id="editorEdit" wire:model.defer="editedTask.content" class="bg-gray-100 p-2 rounded w-full"></textarea>
+                        </div>
+                    </div>
+
+
+
                     <!-- Update Button -->
                     <div class="col-span-2 text-right mt-4">
                         <button wire:click="saveTask"
@@ -485,11 +488,12 @@
 
                         {{-- Content CKEditor (Ditempatkan di bawah form) --}}
                         <div class="col-span-2">
-                            <label for="editor" class="block text-sm font-medium text-gray-700">Content</label>
+                            <label for="editorCreate" class="block text-sm font-medium text-gray-700">Content</label>
                             <div wire:ignore>
-                                <textarea id="editor" wire:model.defer="newTask.content" class="bg-gray-100 p-2 rounded w-full"></textarea>
+                                <textarea id="editorCreate" wire:model.defer="newTask.content" class="bg-gray-100 p-2 rounded w-full"></textarea>
                             </div>
                         </div>
+
 
                         <div class="col-span-2 text-right mt-4">
                             <button wire:click="saveNewTask"
@@ -506,51 +510,78 @@
     @push('scripts')
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                let editorInstance;
+                let editorInstances = {};
 
-                function initCKEditor() {
-                    if (editorInstance) {
-                        editorInstance.destroy().then(() => {
-                            createEditor();
+                function initCKEditor(editorId) {
+                    if (editorInstances[editorId]) {
+                        editorInstances[editorId].destroy().then(() => {
+                            createEditor(editorId);
+                        }).catch(error => {
+                            console.error("Error destroying CKEditor:", error);
+                            createEditor(editorId);
                         });
                     } else {
-                        createEditor();
+                        createEditor(editorId);
                     }
                 }
 
-                function createEditor() {
-                    ClassicEditor
-                        .create(document.getElementById('editor'))
-                        .then(editor => {
-                            editorInstance = editor;
+                function createEditor(editorId) {
+                    let editorElement = document.getElementById(editorId);
+                    if (!editorElement) return;
 
-                            // Update Livewire ketika isi CKEditor berubah
+                    ClassicEditor
+                        .create(editorElement)
+                        .then(editor => {
+                            editorInstances[editorId] = editor;
+
                             editor.model.document.on('change:data', () => {
-                                Livewire.dispatch('updateTaskContent', editor.getData());
+                                let content = editor.getData();
+                                if (editorId === 'editorCreate') {
+                                    Livewire.dispatch('updateTaskContentCreate', {
+                                        content
+                                    });
+                                } else if (editorId === 'editorEdit') {
+                                    Livewire.dispatch('updateTaskContentEdit', {
+                                        content
+                                    });
+                                }
                             });
 
                         })
                         .catch(error => {
-                            console.error(error);
+                            console.error("Error initializing CKEditor:", error);
                         });
                 }
 
-
-                Livewire.hook('message.processed', (message, component) => {
-                    setTimeout(() => {
-                        if (document.getElementById('editor')) {
-                            initCKEditor();
+                function initializeEditors() {
+                    ['editorCreate', 'editorEdit'].forEach(editorId => {
+                        if (document.getElementById(editorId)) {
+                            initCKEditor(editorId);
                         }
-                    }, 300);
+                    });
+                }
+
+                // Langsung jalankan saat halaman dimuat
+                initializeEditors();
+
+                Livewire.hook('message.processed', () => {
+                    setTimeout(initializeEditors, 300);
                 });
 
-                Livewire.on('initEditor', () => {
-                    setTimeout(() => {
-                        if (document.getElementById('editor')) {
-                            initCKEditor();
-                        }
-                    }, 300);
+                Livewire.on('initEditor', initializeEditors);
+
+                Livewire.on('setContent:editorCreate', content => {
+                    if (editorInstances['editorCreate']) {
+                        editorInstances['editorCreate'].setData(content);
+                    }
                 });
+
+                Livewire.on('setContent:editorEdit', content => {
+                    if (editorInstances['editorEdit']) {
+                        editorInstances['editorEdit'].setData(content);
+                    }
+                });
+
             });
         </script>
     @endpush
