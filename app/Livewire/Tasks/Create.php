@@ -21,9 +21,6 @@ class Create extends Component
     public $project_id;
     public $type_id;
     public $priority_id;
-    public $code;
-    public $order;
-    public $estimation;
     public $start_date;
     public $end_date;
 
@@ -49,9 +46,6 @@ class Create extends Component
             'project_id' => 'required|exists:projects,id',
             'type_id' => 'required|exists:task_types,id',
             'priority_id' => 'required|exists:priorities,id',
-            'code'=> 'required',
-            'order'=> 'required',
-            'estimation'=> 'required',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
@@ -66,9 +60,6 @@ class Create extends Component
             'project_id' => $this->project_id,
             'type_id' => $this->type_id,
             'priority_id' => $this->priority_id,
-            'code' => $this->code,
-            'order' => $this->order,
-            'estimation' => $this->estimation,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
         ]);

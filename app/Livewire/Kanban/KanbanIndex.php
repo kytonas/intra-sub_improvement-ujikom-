@@ -136,7 +136,7 @@ class KanbanIndex extends Component
 
     public function openCreateTaskModal()
     {
-        
+
         $this->creatingTask = true;
         $this->newTask      = [
             'name'           => '',
@@ -146,9 +146,6 @@ class KanbanIndex extends Component
             'status_id'      => '',
             'type_id'        => '',
             'priority_id'    => '',
-            'code'           => '',
-            'order'          => '',
-            'estimation'     => '',
             'is_default'     => true,
             'start_date'     => null,
             'end_date'       => null,

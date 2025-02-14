@@ -55,9 +55,6 @@
                         class="text-xs font-semibold tracking-wide text-left text-black-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-black-400 dark:bg-gray-800">
                         <th class="px-4 py-3">Name</th>
                         <th class="px-4 py-3">Content</th>
-                        <th class="px-4 py-3">Code</th>
-                        <th class="px-4 py-3">Order</th>
-                        <th class="px-4 py-3">Estimation</th>
                         <th class="px-4 py-3">Action</th>
                     </tr>
                 </thead>
@@ -66,9 +63,6 @@
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3 text-sm">{{ $task->name }}</td>
                             <td class="px-4 py-3 text-sm">{!! $task->content !!}</td>
-                            <td class="px-4 py-3 text-sm">{{ $task->code }}</td>
-                            <td class="px-4 py-3 text-sm">{{ $task->order }}</td>
-                            <td class="px-4 py-3 text-sm">{{ $task->estimation }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center space-x-4 text-sm">
                                     @can('manageTasks-edit')

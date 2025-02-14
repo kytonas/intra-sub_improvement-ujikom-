@@ -21,9 +21,7 @@ class Edit extends Component
     public $project_id;
     public $type_id;
     public $priority_id;
-    public $code;
-    public $order;
-    public $estimation;
+
 
     // Method untuk inisialisasi data dari task yang akan diedit
     public function mount($tasksId)
@@ -37,9 +35,6 @@ class Edit extends Component
         $this->project_id = $this->task->project_id;
         $this->type_id = $this->task->type_id;
         $this->priority_id = $this->task->priority_id;
-        $this->code = $this->task->code;
-        $this->order = $this->task->order;
-        $this->estimation = $this->task->estimation;
     }
 
     // Method untuk memperbarui data
@@ -55,9 +50,6 @@ class Edit extends Component
             'project_id' => 'required|exists:projects,id',
             'type_id' => 'required|exists:task_types,id',
             'priority_id' => 'required|exists:priorities,id',
-            'code'=> 'required',
-            'order'=> 'required',
-            'estimation'=> 'required',
         ]);
 
         // Memperbarui data task di database
@@ -70,9 +62,6 @@ class Edit extends Component
             'project_id' => $this->project_id,
             'type_id' => $this->type_id,
             'priority_id' => $this->priority_id,
-            'code' => $this->code,
-            'order' => $this->order,
-            'estimation' => $this->estimation,
         ]);
 
         // Menampilkan pesan sukses

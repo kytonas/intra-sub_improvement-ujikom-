@@ -10,7 +10,7 @@ class Tasks extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'content', 'owner_id', 'responsible_id', 'status_id', 'project_id', 'type_id', 'priority_id', 'code', 'order', 'estimation','start_date','end_date'
+        'name', 'content', 'owner_id', 'responsible_id', 'status_id', 'project_id', 'type_id', 'priority_id','start_date','end_date'
     ];
 
     // Relasi ke User sebagai owner

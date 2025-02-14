@@ -20,7 +20,7 @@ class Edit extends Component
     public $cover_image;
     public $users;
     public $statuses;
-    public $ticket_prefix;
+
 
     public function mount($projectId)
     {
@@ -34,7 +34,6 @@ class Edit extends Component
         $this->description = $project->description;
         $this->owner_id = $project->owner_id;
         $this->status_id = $project->status_id;
-        $this->ticket_prefix = $project->ticket_prefix;
 
         // Fetch users and statuses for dropdown options
         $this->users = User::all();
@@ -49,7 +48,6 @@ class Edit extends Component
             'description' => 'required',
             'owner_id' => 'required|exists:users,id',
             'status_id' => 'required|exists:statuses,id',
-            'ticket_prefix' => 'required|string|max:255',
             'cover_image' => 'nullable|image', // cover_image is optional for updates
         ]);
 
@@ -63,7 +61,6 @@ class Edit extends Component
                 'description' => $this->description,
                 'owner_id' => $this->owner_id,
                 'status_id' => $this->status_id,
-                'ticket_prefix' => $this->ticket_prefix,
             ]);
         } else {
             // Update project with the new data
@@ -72,7 +69,6 @@ class Edit extends Component
                 'description' => $this->description,
                 'owner_id' => $this->owner_id,
                 'status_id' => $this->status_id,
-                'ticket_prefix' => $this->ticket_prefix,
             ]);
 
         }

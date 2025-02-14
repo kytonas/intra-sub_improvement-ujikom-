@@ -13,7 +13,6 @@ class Project extends Model
         'description',
         'owner_id',
         'status_id',
-        'ticket_prefix',
         'cover_image',
     ];
     public $timestamp = true;

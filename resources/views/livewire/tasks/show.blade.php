@@ -96,30 +96,6 @@
                             {{ $task->priority->name ?? 'N/A' }}
                         </td>
                     </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                            <strong>Kode:</strong>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                            {{ $task->code }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                            <strong>Pesanan:</strong>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                            {{ $task->order }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                            <strong>Estimasi</strong>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                            {{ $task->estimation }}
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>

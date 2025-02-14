@@ -134,38 +134,6 @@
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
 
-            <!-- Code -->
-            <label class="block text-sm mt-4">
-                <span class="text-gray-700 dark:text-gray-400">Task Code</span>
-                <input
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-black"
-                    placeholder="Edit task code" type="text" wire:model="code" />
-                @error('code')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </label>
-
-            <!-- Order -->
-            <label class="block text-sm mt-4">
-                <span class="text-gray-700 dark:text-gray-400">Task Order</span>
-                <input
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-black"
-                    placeholder="Edit task order" type="number" wire:model="order" />
-                @error('order')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </label>
-
-            <!-- Estimation -->
-            <label class="block text-sm mt-4">
-                <span class="text-gray-700 dark:text-gray-400">Estimation (hours)</span>
-                <input
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-black"
-                    placeholder="Edit estimation hours" type="number" wire:model="estimation" />
-                @error('estimation')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </label>
         </div>
         <button type="reset" class="btn btn-md btn-warning text-white">Reset</button>
         <button type="submit" class="btn btn-md btn-primary">Save Changes</button>

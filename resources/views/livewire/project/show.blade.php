@@ -49,14 +49,6 @@
                         </tr>
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                                <strong>Ticket Prefix</strong>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
-                                {{ $project->ticket_prefix }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">
                                 <strong>Owner:</strong>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-black-600 dark:text-black-400">

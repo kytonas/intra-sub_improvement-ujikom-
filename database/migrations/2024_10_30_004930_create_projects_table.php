@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('description');
             $table->unsignedBigInteger('owner_id');
             $table->unsignedBigInteger('status_id');
-            $table->string('ticket_prefix');
             $table->text('cover_image');
             $table->timestamps();
         });

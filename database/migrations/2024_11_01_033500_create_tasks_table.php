@@ -22,9 +22,6 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('type_id')->nullable();
             $table->unsignedBigInteger('priority_id')->nullable();
-            $table->string('code')->nullable();
-            $table->integer('order')->nullable();
-            $table->integer('estimation')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();

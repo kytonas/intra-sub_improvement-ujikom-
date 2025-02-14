@@ -15,7 +15,6 @@ class Create extends Component
     public $description;
     public $owner_id;
     public $status_id;
-    public $ticket_prefix;
     public $cover_image;
 
     public function mount()
@@ -31,7 +30,6 @@ class Create extends Component
             'description' => 'required',
             'owner_id' => 'required|exists:users,id',
             'status_id' => 'required|exists:statuses,id',
-            'ticket_prefix' => 'required|string|max:255',
             'cover_image' => 'required|image|mimes:jpeg,jpg,png,gif|max:2048', // Hanya gambar
         ]);
 
@@ -47,7 +45,6 @@ class Create extends Component
             'description' => $this->description,
             'owner_id' => $this->owner_id,
             'status_id' => $this->status_id,
-            'ticket_prefix' => $this->ticket_prefix,
             'cover_image' => $covername,
         ]);
 

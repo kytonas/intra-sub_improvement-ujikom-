@@ -99,16 +99,6 @@
                 @enderror
             </label>
 
-            <!-- Ticket Prefix -->
-            <label class="block text-sm mt-4">
-                <span class="text-gray-700 dark:text-gray-400">Ticket Prefix</span>
-                <input
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-black"
-                    placeholder="Insert ticket prefix" type="number" wire:model="ticket_prefix" />
-                @error('ticket_prefix')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </label>
         </div>
 
         <button type="reset" class="btn btn-md btn-warning text-wh">Reset</button>

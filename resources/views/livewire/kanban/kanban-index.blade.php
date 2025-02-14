@@ -410,27 +410,6 @@
                         </select>
                     </div>
 
-                    <!-- Code -->
-                    <div class="col-span-1">
-                        <label for="code" class="block text-sm font-medium text-gray-700">Code</label>
-                        <input id="code" type="text" wire:model="editedTask.code" placeholder="Enter Code"
-                            class="bg-gray-100 p-2 rounded w-full" wire:keyup="updateTaskRealTime" />
-                    </div>
-
-                    <!-- Order -->
-                    <div class="col-span-1">
-                        <label for="order" class="block text-sm font-medium text-gray-700">Order</label>
-                        <input id="order" type="number" wire:model="editedTask.order" placeholder="Enter Order"
-                            class="bg-gray-100 p-2 rounded w-full" wire:keyup="updateTaskRealTime" />
-                    </div>
-
-                    <!-- Estimation -->
-                    <div class="col-span-1">
-                        <label for="estimation" class="block text-sm font-medium text-gray-700">Estimation</label>
-                        <input id="estimation" type="number" wire:model="editedTask.estimation"
-                            placeholder="Enter Estimation" class="bg-gray-100 p-2 rounded w-full"
-                            wire:keyup="updateTaskRealTime" />
-                    </div>
 
                     <!-- Content -->
                     <div class="col-span-2">
@@ -465,7 +444,7 @@
                     <h3 class="text-xl font-semibold">Create Task</h3>
 
                     <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @foreach ([['label' => 'Task Name', 'model' => 'newTask.name', 'type' => 'text'], ['label' => 'Owner', 'model' => 'newTask.owner_id', 'type' => 'select', 'options' => $owners], ['label' => 'Start Date', 'model' => 'newTask.start_date', 'type' => 'date'], ['label' => 'End Date', 'model' => 'newTask.end_date', 'type' => 'date'], ['label' => 'Responsible', 'model' => 'newTask.responsible_id', 'type' => 'select', 'options' => $responsibles], ['label' => 'Type', 'model' => 'newTask.type_id', 'type' => 'select', 'options' => $types], ['label' => 'Priority', 'model' => 'newTask.priority_id', 'type' => 'select', 'options' => $priorities], ['label' => 'Code', 'model' => 'newTask.code', 'type' => 'text'], ['label' => 'Order', 'model' => 'newTask.order', 'type' => 'number'], ['label' => 'Estimation', 'model' => 'newTask.estimation', 'type' => 'number']] as $field)
+                        @foreach ([['label' => 'Task Name', 'model' => 'newTask.name', 'type' => 'text'], ['label' => 'Owner', 'model' => 'newTask.owner_id', 'type' => 'select', 'options' => $owners], ['label' => 'Start Date', 'model' => 'newTask.start_date', 'type' => 'date'], ['label' => 'End Date', 'model' => 'newTask.end_date', 'type' => 'date'], ['label' => 'Responsible', 'model' => 'newTask.responsible_id', 'type' => 'select', 'options' => $responsibles], ['label' => 'Type', 'model' => 'newTask.type_id', 'type' => 'select', 'options' => $types], ['label' => 'Priority', 'model' => 'newTask.priority_id', 'type' => 'select', 'options' => $priorities]] as $field)
                             <div class="col-span-1">
                                 <label for="{{ $field['model'] }}"
                                     class="block text-sm font-medium text-gray-700">{{ $field['label'] }}</label>
@@ -585,10 +564,6 @@
             });
         </script>
     @endpush
-
-
-
-
 
 
     <script>
