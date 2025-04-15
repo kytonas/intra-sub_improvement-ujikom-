@@ -75,7 +75,8 @@
                 events: {!! $eventsJson !!},
                 eventClick: function(info) {
                     let today = new Date();
-                    let eventDate = new Date(info.event.start);
+                    let eventDate = new Date(info.event.end);
+                    eventDate.setDate(eventDate.getDate() - 1);
                     let diffMs = eventDate - today;
                     let diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
                     let diffHours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -129,7 +130,8 @@
                 },
                 eventDidMount: function(info) {
                     let today = new Date();
-                    let eventDate = new Date(info.event.start);
+                    let eventDate = new Date(info.event.end);
+                    eventDate.setDate(eventDate.getDate() - 1);
                     let diffMs = eventDate - today;
                     let diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 

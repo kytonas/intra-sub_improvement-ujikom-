@@ -6,6 +6,7 @@ use App\Services\GoogleCalendarService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
+use Carbon\Carbon;
 
 class GoogleCalendar extends Component
 {
@@ -44,8 +45,8 @@ class GoogleCalendar extends Component
         $taskEvents = $taskQuery->get()->map(function ($task) {
             return [
                 'title'       => $task->name,
-                'start'       => $task->end_date,
-                'end'         => $task->end_date,
+                'start'       => Carbon::parse($task->start_date)->toDateString(),
+                'end'         => Carbon::parse($task->end_date)->addDay()->toDateString(),
                 'description' => $task->content,
                 'id'          => $task->id,
                 'project'     => $task->project->name ?? 'Tanpa Proyek',
