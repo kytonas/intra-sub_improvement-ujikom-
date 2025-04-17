@@ -1,52 +1,52 @@
-<div>
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 py-10">
+    <div class="container px-6 mx-auto space-y-6">
 
-    {{-- content --}}
-    <div class="container px-6 mx-auto">
-        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-            Dashboard
-        </h2>
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-white">Dashboard</h2>
 
-        <div class="grid grid-cols-3 gap-4">
-            <!-- Kolom 1: Jam Digital, Sambutan, dan Total User -->
-            <div class="col-span-1 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Kolom 1 -->
+            <div class="space-y-6">
                 <!-- Jam Digital -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
-                    <p class="text-5xl font-extrabold text-gray-800 dark:text-white" wire:poll.1s="updateClock">
-                        {{ now()->format('H:i:s') }}
+                <div
+                    class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl shadow-xl p-6 text-center overflow-hidden">
+                    <p class="text-5xl md:text-6xl font-bold tracking-widest truncate" wire:poll.1s="updateClock">
+                        {{ now()->format('H:i') }}
                     </p>
-                    <p class="text-lg text-gray-600 dark:text-gray-300">
+                    <p class="mt-2 text-base md:text-lg font-light">
                         {{ now()->isoFormat('dddd, D MMMM YYYY') }}
                     </p>
                 </div>
 
+
                 <!-- Sambutan -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <p class="text-xl text-gray-800 dark:text-gray-200">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                    <p class="text-lg md:text-xl text-gray-700 dark:text-gray-200 font-medium">
                         Selamat datang di halaman dashboard,
-                        <span class="text-blue-500 font-semibold">{{ Auth::user()->name }}</span>!
+                        <span
+                            class="text-indigo-600 dark:text-indigo-400 font-semibold">{{ Auth::user()->name }}</span>!
                     </p>
                 </div>
 
                 <!-- Total User -->
                 @if ($totalUsers)
-                    <div class="flex items-center bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full text-white">
-                            <i class='bx bxs-user text-3xl'></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
+                            <i class='bx bxs-user text-3xl text-white'></i>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-lg font-medium text-gray-800 dark:text-gray-300">Total User</p>
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">Total User</p>
                             <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalUsers }}</p>
                         </div>
                     </div>
                 @endif
             </div>
 
-            <!-- Kolom 2: Google Calendar -->
-            <div class="col-span-2">
+            <!-- Kolom 2 & 3: Kalender -->
+            <div class="md:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
                 @livewire('google-calendar')
             </div>
+
         </div>
     </div>
-
-
 </div>
